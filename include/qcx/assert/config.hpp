@@ -1,0 +1,57 @@
+#pragma once
+
+#if !defined(QCX_ASSERT_LEVEL_NONE)      \
+    && !defined(QCX_ASSERT_LEVEL_FAST)   \
+    && !defined(QCX_ASSERT_LEVEL_NORMAL) \
+    && !defined(QCX_ASSERT_LEVEL_DEBUG)
+
+#if defined(QCX_TARGET_OPTIMIZED_BUILD)
+#define QCX_ASSERT_LEVEL_FAST
+#elif defined(QCX_TARGET_DEBUG_BUILD)
+#define QCX_ASSERT_LEVEL_DEBUG
+#else
+#define QCX_ASSERT_LEVEL_NORMAL
+#endif
+
+#endif
+
+#if defined(QCX_ASSERT_LEVEL_NONE)         \
+        + defined(QCX_ASSERT_LEVEL_FAST)   \
+        + defined(QCX_ASSERT_LEVEL_NORMAL) \
+        + defined(QCX_ASSERT_LEVEL_DEBUG)   \
+    > 1
+#error Cannot have multiple of QCX_ASSERT_LEVEL_{NONE, FAST, NORMAL, DEBUG} specified
+#endif
+
+#ifdef QCX_ASSERT_LEVEL_NONE
+#define QCX_ASSERT_FAST_ACTIVE 0
+#define QCX_ASSERT_ACTIVE 0
+#define QCX_ASSERT_DEBUG_ACTIVE 0
+#endif
+
+#ifdef QCX_ASSERT_LEVEL_FAST
+#define QCX_ASSERT_FAST_ACTIVE 1
+#define QCX_ASSERT_ACTIVE 0
+#define QCX_ASSERT_DEBUG_ACTIVE 0
+#endif
+
+#ifdef QCX_ASSERT_LEVEL_NORMAL
+#define QCX_ASSERT_FAST_ACTIVE 1
+#define QCX_ASSERT_ACTIVE 1
+#define QCX_ASSERT_DEBUG_ACTIVE 0
+#endif
+
+#ifdef QCX_ASSERT_LEVEL_DEBUG
+#define QCX_ASSERT_FAST_ACTIVE 1
+#define QCX_ASSERT_ACTIVE 1
+#define QCX_ASSERT_DEBUG_ACTIVE 1
+#endif
+
+#define QCX_DETAIL_ASSERT_STR2(...) #__VA_ARGS__
+#define QCX_DETAIL_ASSERT_STR(...) QCX_DETAIL_ASSERT_STR2(__VA_ARGS__)
+
+#ifdef QCX_ASSERT_NO_SOURCE_INFO
+#define QCX_ASSERT_SOURCE_INFO ""
+#else
+#define QCX_ASSERT_SOURCE_INFO __FILE__ ":" QCX_DETAIL_ASSERT_STR(__LINE__) ":\t"
+#endif

@@ -1,0 +1,5 @@
+#pragma once
+
+#include <qcx/assert/config.hpp>
+#include <qcx/assert/handler.hpp>
+#include <qcx/assert/macros.hpp>

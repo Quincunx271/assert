@@ -1,0 +1,5 @@
+AllowShortIfStatementsOnASingleLine: true
+BasedOnStyle:                        WebKit
+Cpp11BracedListStyle:                true
+NamespaceIndentation:                All
+Standard:                            Cpp11
