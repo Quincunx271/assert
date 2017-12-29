@@ -26,7 +26,7 @@ class MyClass {
 public:
     void set_data(int data)
     {
-        QCX_ASSERT_DEBUG(data != 42);
+        QCX_ASSERT_SAFE(data != 42);
         this->data = data;
     }
 
@@ -49,7 +49,7 @@ Rule of thumb:
   the assertion time would be unnoticeable.
 * Use `QCX_ASSERT` in source files. It's for assertions that you wouldn't
   necessarily want on in production.
-* Use `QCX_ASSERT_DEBUG` for inline functions, where the amount of work checking
+* Use `QCX_ASSERT_SAFE` for inline functions, where the amount of work checking
   for the assertion is significant compared to the rest of the work of the
   function. You might also want to use this in a source file for doing
   expensive checks.
@@ -62,14 +62,14 @@ be controlled by passing preprocessor defines to your build system.
 You may pass only one of the following:
 
 * `-DQCX_TARGET_OPTIMIZED_BUILD` - only `QCX_ASSERT_FAST` assertions on
-* `-DQCX_TARGET_DEBUG_BUILD` - all assertions on
+* `-DQCX_TARGET_SAFE_BUILD` - all assertions on
 
 Or, you may instead choose to pass only one of the following:
 
 * `-DQCX_ASSERT_LEVEL_NONE` - all assertions off
 * `-DQCX_ASSERT_LEVEL_FAST` - only `QCX_ASSERT_FAST` assertions on
 * `-DQCX_ASSERT_LEVEL_NORMAL` - `QCX_ASSERT_FAST` and `QCX_ASSERT` on
-* `-DQCX_ASSERT_LEVEL_DEBUG` - all assertions on
+* `-DQCX_ASSERT_LEVEL_SAFE` - all assertions on
 
 Note: make sure all components are built with the same assertion setting, or
 you risk violating the *One Definition Rule.*
@@ -77,16 +77,21 @@ you risk violating the *One Definition Rule.*
 ### Customize assertion handler
 
 The assertion handler can be customized by calling
-`qcx::register_assertion_handler(myHandler)`. There are 2 handlers provided:
+`qcx::use_assert_handler(myHandler)`. There are 2 handlers provided:
 
-* `qcx::abort_handler` - prints the assertion message and `abort()`s
-* `qcx::throw_handler` - throws a `std::logic_error` with the assertion message
+* `qcx::abort_assert_handler` - prints the assertion message and `abort()`s
+* `qcx::throw_assert_handler` - throws a `std::logic_error` with the assertion message
 
 The function signature should be:
 
-    [[noreturn]] void myHandler(char const* message)
+    [[noreturn]] void myHandler(qcx::assert_info const& message)
 
 **Note:** This function signature is extremely likely to change in the future
+
+You can also call the handlers directly, which act as a failing assertion. To 
+obtain a `qcx::assert_info`, you can call `QCX_ASSERT_INFO(message)`, where
+message is convertible to `std::string_view`, and one will be constructed with
+the source information.
 
 ## Dependencies
 

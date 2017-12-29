@@ -4,8 +4,8 @@
 #include <qcx/assert/handler.hpp>
 
 namespace qcx::detail {
-    inline void run_assert(bool condition, char const* message)
+    inline void run_assert(bool condition, qcx::assert_info const& info)
     {
-        if (!condition) qcx::detail::assert_handler(message);
+        if (!condition) qcx::detail::assert_handler(info);
     }
 }
