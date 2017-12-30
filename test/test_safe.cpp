@@ -14,14 +14,14 @@ TEST_CASE("")
 
     SECTION("fast assert")
     {
-        REQUIRE_THROWS_AS([] { QCX_ASSERT_FAST(false); }(), qcx::assertion_error);
+        REQUIRE_THROWS_AS(QCX_ASSERT_FAST(false), qcx::assertion_error);
     }
     SECTION("regular assert")
     {
-        REQUIRE_THROWS_AS([] { QCX_ASSERT(false); }(), qcx::assertion_error);
+        REQUIRE_THROWS_AS(QCX_ASSERT(false), qcx::assertion_error);
     }
     SECTION("safe assert")
     {
-        REQUIRE_THROWS_AS([] { QCX_ASSERT_SAFE(false); }(), qcx::assertion_error);
+        REQUIRE_THROWS_AS(QCX_ASSERT_SAFE(false), qcx::assertion_error);
     }
 }

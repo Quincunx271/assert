@@ -71,6 +71,8 @@ Or, you may instead choose to pass only one of the following:
 * `-DQCX_ASSERT_LEVEL_NORMAL` - `QCX_ASSERT_FAST` and `QCX_ASSERT` on
 * `-DQCX_ASSERT_LEVEL_SAFE` - all assertions on
 
+An assertion that is off is equivalent to `((void)0)`
+
 Note: make sure all components are built with the same assertion setting, or
 you risk violating the *One Definition Rule.*
 
@@ -97,13 +99,12 @@ the source information.
 
 This library has no dependencies.
 
+The tests, on the other hand, require *meson*. *meson* will automatically download
+*Catch2*.
+
 ## Tests
 
-To run the tests, you need to have ruby installed. Run **run_tests.rb** from
-the test directory.
-
-Note: The tests are only known to work on Windows, but they *should* be cross
-platform.
+To run the tests, after `meson build`, run `ninja test`.
 
 ## Acknowledgements
 
