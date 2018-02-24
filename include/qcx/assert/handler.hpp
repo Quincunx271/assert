@@ -24,8 +24,7 @@ namespace qcx {
 
     using assert_handler_f = void(assert_info const& info);
 
-    class assertion_error : std::logic_error {
-    public:
+    struct assertion_error : std::logic_error {
         using std::logic_error::logic_error;
     };
 

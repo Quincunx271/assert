@@ -1,0 +1,17 @@
+dist: trusty
+sudo: false
+language: cpp
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+      - llvm-toolchain-trusty-5.0
+    packages:
+      - g++-7
+      - clang-5.0
+
+script:
+  - mkdir build && cd build
+  - cmake ..
+  - cmake --build . -- -j2

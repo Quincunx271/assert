@@ -1,6 +1,0 @@
-[wrap-file]
-directory = catch2
-
-source_url = https://github.com/Quincunx271/catch2-meson-wrap/releases/download/v2.0.1/catch2.zip
-source_filename = catch2.zip
-source_hash = 75c574d0191d67845ecd01ccca43146f8ebccac9b4ec0516ae5571cde53ba1e9

@@ -99,12 +99,11 @@ the source information.
 
 This library has no dependencies.
 
-The tests, on the other hand, require *meson*. *meson* will automatically download
-*Catch2*.
+The tests require Catch2.
 
 ## Tests
 
-To run the tests, after `meson build`, run `ninja test`.
+To run the tests, build with *cmake* and run *ctest*.
 
 ## Acknowledgements
 
