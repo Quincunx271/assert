@@ -1,12 +1,5 @@
 if(BUILD_TESTING)
-  find_path(CATCH_INCLUDE_DIR catch.hpp)
-  if(CATCH_INCLUDE_DIR STREQUAL "CATCH_INCLUDE_DIR-NOTFOUND")
-    message(FATAL_ERROR "Could not find Catch2")
-  endif()
-  add_library(Catch INTERFACE)
-  target_include_directories(Catch
-    INTERFACE ${CATCH_INCLUDE_DIR}
-  )
+  find_package(Catch2 REQUIRED)
 
   ##########
   # Test targets
@@ -17,7 +10,7 @@ if(BUILD_TESTING)
     test_fast.cpp
   )
   target_link_libraries(qcx_assert_test_fast
-    Catch
+    Catch2::Catch
     qcx_assert
   )
   target_compile_definitions(qcx_assert_test_fast PRIVATE QCX_ASSERT_LEVEL_FAST)
@@ -27,7 +20,7 @@ if(BUILD_TESTING)
     test_normal.cpp
   )
   target_link_libraries(qcx_assert_test_normal
-    Catch
+    Catch2::Catch
     qcx_assert
   )
   target_compile_definitions(qcx_assert_test_normal PRIVATE QCX_ASSERT_LEVEL_NORMAL)
@@ -37,7 +30,7 @@ if(BUILD_TESTING)
     test_safe.cpp
   )
   target_link_libraries(qcx_assert_test_safe
-    Catch
+    Catch2::Catch
     qcx_assert
   )
   target_compile_definitions(qcx_assert_test_safe PRIVATE QCX_ASSERT_LEVEL_SAFE)
@@ -47,7 +40,7 @@ if(BUILD_TESTING)
     test_normal.cpp
   )
   target_link_libraries(qcx_assert_test_default
-    Catch
+    Catch2::Catch
     qcx_assert
   )
 
