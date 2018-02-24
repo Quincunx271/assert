@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Quincunx271/assert.svg?branch=develop)](https://travis-ci.org/Quincunx271/assert)
+
 ## Overview
 
 *Assert* is a small header-only library providing more fine grained control over

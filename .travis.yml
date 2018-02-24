@@ -18,14 +18,18 @@ before_install:
   - git clone https://github.com/catchorg/Catch2.git
   - cd Catch2 && mkdir build && cd build
   - cmake .. -DBUILD_TESTING=OFF
-  - cmake --build . -- install
+  - sudo cmake --build . -- install
   - popd
 script:
   - mkdir build && cd build
-  - cmake .. -DQCX_ASSERT_CI_DEFAULTS=ON
+  - CC=gcc-7 CXX=g++-7 cmake .. -DQCX_ASSERT_CI_DEFAULTS=ON
   - cmake --build . -- -j2
   - ctest -V
-  - cmake --build . -- install
+  - rm -r *
+  - CC=clang-5 CXX=clang++-5 cmake .. -DQCX_ASSERT_CI_DEFAULTS=ON
+  - cmake --build . -- -j2
+  - ctest -V
+  - sudo cmake --build . -- install
   - pushd $HOME
   # try to use the project now
   - mkdir proj && cd proj
@@ -42,6 +46,6 @@ script:
   - echo "try{QCX_ASSERT_FAST(false);}catch(qcx::assertion_error const&){return 0;}" >>main.cpp
   - echo "return 1;}" >>main.cpp
   - mkdir build && cd build
-  - cmake ..
+  - CC=clang-5 CXX=clang++-5 cmake ..
   - cmake --build .
   - ./proj
