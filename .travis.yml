@@ -15,9 +15,29 @@ before_install:
   - pushd $HOME
   - wget https://cmake.org/files/v3.8/cmake-3.8.2-Linux-x86_64.sh
   - sudo sh cmake-3.8.2-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
-  - cmake --version # See that the cmake install did work
+  - popd
 script:
   - mkdir build && cd build
   - cmake .. -DQCX_ASSERT_CI_DEFAULTS=ON
   - cmake --build . -- -j2
   - ctest -V
+  - cmake --build . -- install
+  - pushd $HOME
+  # try to use the project now
+  - mkdir proj && cd proj
+  # setup CMakeLists.txt
+  - echo "cmake_minimum_required(VERSION 3.8)" >CMakeLists.txt
+  - echo "project(proj CXX)" >>CMakeLists.txt
+  - echo "find_package(QcxAssert 0.1 REQUIRED)" >>CMakeLists.txt
+  - echo "add_executable(proj main.cpp)" >>CMakeLists.txt
+  - echo "target_link_libraries(proj Qcx::Assert)" >>CMakeLists.txt
+  # setup main.cpp
+  - echo "#include <qcx/assert.hpp>" >main.cpp
+  - echo "int main(){" >>main.cpp
+  - echo "qcx::use_assert_handler(qcx::throw_assert_handler);" >>main.cpp
+  - echo "try{QCX_ASSERT_FAST(false);}catch(qcx::assertion_error const&){return 0;}" >>main.cpp
+  - echo "return 1;}" >>main.cpp
+  - mkdir build && cd build
+  - cmake ..
+  - cmake --build .
+  - ./proj
