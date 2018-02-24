@@ -101,6 +101,10 @@ This library has no dependencies.
 
 The tests require Catch2.
 
+## Using
+
+To use this library after installing with *cmake*, use `find_package(QcxAssert)` and use `target_link_libraries` with `Qcx::Assert`
+
 ## Tests
 
 To run the tests, build with *cmake* and run *ctest*.
