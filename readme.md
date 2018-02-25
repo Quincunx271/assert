@@ -92,6 +92,8 @@ The function signature should be:
 
 **Note:** This function signature is extremely likely to change in the future
 
+It is Undefined Behavior if the handler does return.
+
 You can also call the handlers directly, which act as a failing assertion. To 
 obtain a `qcx::assert_info`, you can call `QCX_ASSERT_INFO(message)`, where
 message is convertible to `std::string_view`, and one will be constructed with

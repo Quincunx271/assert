@@ -1,5 +1,4 @@
-#ifndef QCX_ASSERT_MACROS_H_
-#define QCX_ASSERT_MACROS_H_
+#pragma once
 
 #include <qcx/assert/config.hpp>
 #include <qcx/assert/detail/run_assert.hpp>
@@ -22,6 +21,4 @@
 #define QCX_ASSERT_SAFE(...) QCX_DETAIL_RUN_ASSERT(__VA_ARGS__)
 #else
 #define QCX_ASSERT_SAFE(...) ((void)0)
-#endif
-
 #endif
