@@ -12,6 +12,7 @@ matrix:
             - ubuntu-toolchain-r-test
             - llvm-toolchain-trusty-5.0
           packages:
+            - g++-7 # Gets newer version of libstdc++ hopefully
             - clang-5.0
       env: COMPILER='clang++-5.0'
     - os: linux
@@ -48,7 +49,7 @@ before_script:
 
 script:
   - mkdir build && cd build
-  - cmake .. -DQCX_ASSERT_TREAT_WARNINGS_AS_ERRORS=ON -DCMAKE_INSTALL_PREFIX="${DEPS_DIR}/install"
+  - cmake .. -DQCX_ASSERT_TREAT_WARNINGS_AS_ERRORS=ON -DCMAKE_INSTALL_PREFIX="${DEPS_DIR}/install" -DCMAKE_VERBOSE_MAKEFILE=ON
   - cmake --build . -- -j2
   - ctest -V
   - cmake --build . -- install
@@ -68,6 +69,6 @@ script:
   - echo "try{QCX_ASSERT_FAST(false);}catch(qcx::assertion_error const&){return 0;}" >>main.cpp
   - echo "return 1;}" >>main.cpp
   - mkdir build && cd build
-  - cmake ..
+  - cmake .. -DCMAKE_VERBOSE_MAKEFILE=ON
   - cmake --build .
   - ./proj
