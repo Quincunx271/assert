@@ -70,7 +70,7 @@ if(BUILD_TESTING)
         $<$<CONFIG:QCX_ASSERT_TREAT_WARNINGS_AS_ERRORS>:/Wx>
     )
   elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-    target_compile_options(qcx_ assert_test_fast
+    target_compile_options(qcx_assert_test_fast
       PRIVATE
         -Wall
         -Wextra
