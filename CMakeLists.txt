@@ -2,8 +2,6 @@ cmake_minimum_required(VERSION 3.8)
 
 project(qcx_assert VERSION 0.1.2 LANGUAGES CXX)
 
-option(QCX_ASSERT_PCH
-  "compile with precompiled headers (potential speedup). Requires cotire.cmake in CMAKE_MODULE_PATH")
 option(QCX_ASSERT_TREAT_WARNINGS_AS_ERRORS "compiles with -Werror")
 
 include(CTest)

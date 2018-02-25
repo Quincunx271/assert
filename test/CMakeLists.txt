@@ -69,8 +69,8 @@ if(BUILD_TESTING)
         /permissive-
         $<$<CONFIG:QCX_ASSERT_TREAT_WARNINGS_AS_ERRORS>:/Wx>
     )
-  elseif(CMAKE_COMPILER_IS_GNUCC )
-    target_compile_options(qcx_assert_test_fast
+  elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+    target_compile_options(qcx_ assert_test_fast
       PRIVATE
         -Wall
         -Wextra
