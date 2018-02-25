@@ -1,38 +1,58 @@
 dist: trusty
+sudo: false
 language: cpp
 
-addons:
-  apt:
-    sources:
-      - ubuntu-toolchain-r-test
-      - llvm-toolchain-trusty-5.0
-    packages:
-      - g++-7
-      - clang-5.0
+matrix:
+  include:
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - clang-5.0
+      env: COMPILER='clang++-5.0'
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-5.0
+          packages:
+            - g++-7
+      env: COMPILER='g++-7'
 
-before_install:
-  - sudo apt-get purge cmake
-  - pushd $HOME
-  - wget https://cmake.org/files/v3.8/cmake-3.8.2-Linux-x86_64.sh
-  - sudo sh cmake-3.8.2-Linux-x86_64.sh --prefix=/usr/local --exclude-subdir
-  - git clone https://github.com/catchorg/Catch2.git
-  - cd Catch2 && mkdir build && cd build
-  - cmake .. -DBUILD_TESTING=OFF
-  - sudo cmake --build . -- install
+install:
+  - DEPS_DIR="${TRAVIS_BUILD_DIR}/deps"
+  - mkdir -p ${DEPS_DIR} && cd ${DEPS_DIR}
+    # Install CMake
+  - |
+    CMAKE_URL="https://cmake.org/files/v3.8/cmake-3.8.2-Linux-x86_64.tar.gz"
+    mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+    export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+  - travis_retry git clone https://github.com/catchorg/Catch2.git # Install Catch2
+  - pushd Catch2 && mkdir build && cd build
+  - cmake .. -DBUILD_TESTING=OFF -DCMAKE_INSTALL_PREFIX="${DEPS_DIR}/install"
+  - cmake --build . -- install
+  - export CMAKE_PREFIX_PATH="${DEPS_DIR}/install/lib/cmake"
   - popd
+
+before_script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - export CXX=${COMPILER}
+
 script:
   - mkdir build && cd build
-  - CC=gcc-7 CXX=g++-7 cmake .. -DQCX_ASSERT_CI_DEFAULTS=ON
+  - cmake .. -QCX_ASSERT_TREAT_WARNINGS_AS_ERRORS=ON -DCMAKE_INSTALL_PREFIX="${DEPS_DIR}/install"
   - cmake --build . -- -j2
   - ctest -V
-  - rm -r *
-  - CC=clang-5 CXX=clang++-5 cmake .. -DQCX_ASSERT_CI_DEFAULTS=ON
-  - cmake --build . -- -j2
-  - ctest -V
-  - sudo cmake --build . -- install
+  - cmake --build . -- install
   - pushd $HOME
   # try to use the project now
-  - mkdir proj && cd proj
+  - mkdir -p proj && cd proj
   # setup CMakeLists.txt
   - echo "cmake_minimum_required(VERSION 3.8)" >CMakeLists.txt
   - echo "project(proj CXX)" >>CMakeLists.txt
@@ -46,6 +66,6 @@ script:
   - echo "try{QCX_ASSERT_FAST(false);}catch(qcx::assertion_error const&){return 0;}" >>main.cpp
   - echo "return 1;}" >>main.cpp
   - mkdir build && cd build
-  - CC=clang-5 CXX=clang++-5 cmake ..
+  - cmake ..
   - cmake --build .
   - ./proj
