@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Quincunx271/assert.svg?branch=develop)](https://travis-ci.org/Quincunx271/assert)
+
 ## Overview
 
 *Assert* is a small header-only library providing more fine grained control over
@@ -90,6 +92,8 @@ The function signature should be:
 
 **Note:** This function signature is extremely likely to change in the future
 
+It is Undefined Behavior if the handler does return.
+
 You can also call the handlers directly, which act as a failing assertion. To 
 obtain a `qcx::assert_info`, you can call `QCX_ASSERT_INFO(message)`, where
 message is convertible to `std::string_view`, and one will be constructed with
@@ -99,12 +103,15 @@ the source information.
 
 This library has no dependencies.
 
-The tests, on the other hand, require *meson*. *meson* will automatically download
-*Catch2*.
+The tests require Catch2.
+
+## Using
+
+To use this library after installing with *cmake*, use `find_package(QcxAssert)` and use `target_link_libraries` with `Qcx::Assert`
 
 ## Tests
 
-To run the tests, after `meson build`, run `ninja test`.
+To run the tests, build with *cmake* and run *ctest*.
 
 ## Acknowledgements
 

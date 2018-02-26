@@ -3,8 +3,5 @@ build/
 *.obj
 *.o
 
-subprojects/catch2/
-subprojects/packagecache/
-
 *.sublime-workspace
 *.sublime-project

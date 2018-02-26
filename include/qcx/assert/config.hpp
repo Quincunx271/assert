@@ -1,5 +1,4 @@
-#ifndef QCX_ASSERT_CONFIG_H_
-#define QCX_ASSERT_CONFIG_H_
+#pragma once
 
 #if !defined(QCX_ASSERT_LEVEL_NONE)      \
     && !defined(QCX_ASSERT_LEVEL_FAST)   \
@@ -50,5 +49,3 @@
 
 #define QCX_DETAIL_ASSERT_STR2(...) #__VA_ARGS__
 #define QCX_DETAIL_ASSERT_STR(...) QCX_DETAIL_ASSERT_STR2(__VA_ARGS__)
-
-#endif

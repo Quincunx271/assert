@@ -24,8 +24,7 @@ namespace qcx {
 
     using assert_handler_f = void(assert_info const& info);
 
-    class assertion_error : std::logic_error {
-    public:
+    struct assertion_error : std::logic_error {
         using std::logic_error::logic_error;
     };
 
@@ -75,9 +74,20 @@ namespace qcx {
         inline assert_handler_f* assert_handler = abort_assert_handler;
     }
 
+
+// Clang warns about the function returning, but we know that our assert_handler won't return.
+// Clang doesn't know this, since the assert_handler could have been set to a function
+// pointer that *does* return.
+#ifdef __clang__
+#define QCX_ASSERT_INTERNAL_UNREACHABLE() __builtin_unreachable()
+#else
+#define QCX_ASSERT_INTERNAL_UNREACHABLE()
+#endif
+
     [[noreturn]] inline void assert_handler(assert_info const& info)
     {
         detail::assert_handler(info);
+        QCX_ASSERT_INTERNAL_UNREACHABLE();
     }
 
     inline void use_assert_handler(assert_handler_f* handler)
