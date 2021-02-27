@@ -1,51 +1,62 @@
-#pragma once
+#ifndef QCX_ASSERT_CONFIG_HPP
+#define QCX_ASSERT_CONFIG_HPP
 
-#if !defined(QCX_ASSERT_LEVEL_NONE)      \
-    && !defined(QCX_ASSERT_LEVEL_FAST)   \
-    && !defined(QCX_ASSERT_LEVEL_NORMAL) \
-    && !defined(QCX_ASSERT_LEVEL_SAFE)
+#if __has_include(<qcx-assert.tweaks.hpp>)
+#    include <qcx-assert.tweaks.hpp>
+#endif
 
-#if defined(QCX_TARGET_OPTIMIZED_BUILD)
-#define QCX_ASSERT_LEVEL_FAST
-#elif defined(QCX_TARGET_SAFE_BUILD)
-#define QCX_ASSERT_LEVEL_SAFE
+#include <qcx/assert/config/assert_level.hpp>
+#include <qcx/assert/config/attributes.hpp>
+#include <qcx/assert/config/handler.hpp>
+
+namespace qcx::assert::config {
+    namespace defaults {
+    }
+
+    using namespace defaults;
+
+    namespace defaults {
+        QCX_ALWAYS_INLINE constexpr auto level()
+        {
+#ifndef NDEBUG
+            return assert_level::normal;
 #else
-#define QCX_ASSERT_LEVEL_NORMAL
+            return assert_level::fast;
 #endif
+        }
 
-#endif
+        QCX_ALWAYS_INLINE inline auto enable_safe() { return config::level() == assert_level::safe; }
 
-#if defined(QCX_ASSERT_LEVEL_NONE)         \
-        + defined(QCX_ASSERT_LEVEL_FAST)   \
-        + defined(QCX_ASSERT_LEVEL_NORMAL) \
-        + defined(QCX_ASSERT_LEVEL_SAFE)   \
-    > 1
-#error Cannot have multiple of QCX_ASSERT_LEVEL_{NONE, FAST, NORMAL, SAFE} specified
-#endif
+        QCX_ALWAYS_INLINE inline auto enable_normal()
+        {
+            return config::enable_safe() || config::level() == assert_level::normal;
+        }
 
-#ifdef QCX_ASSERT_LEVEL_NONE
-#define QCX_ASSERT_FAST_ACTIVE 0
-#define QCX_ASSERT_ACTIVE 0
-#define QCX_ASSERT_SAFE_ACTIVE 0
-#endif
+        QCX_ALWAYS_INLINE inline auto enable_fast()
+        {
+            return config::enable_normal() || config::level() == assert_level::fast;
+        }
 
-#ifdef QCX_ASSERT_LEVEL_FAST
-#define QCX_ASSERT_FAST_ACTIVE 1
-#define QCX_ASSERT_ACTIVE 0
-#define QCX_ASSERT_SAFE_ACTIVE 0
-#endif
+        [[noreturn]] QCX_NOINLINE inline auto assertion_handler(assert_info const& info)
+        {
+            qcx::assert::abort_assert_handler(info);
+        }
 
-#ifdef QCX_ASSERT_LEVEL_NORMAL
-#define QCX_ASSERT_FAST_ACTIVE 1
-#define QCX_ASSERT_ACTIVE 1
-#define QCX_ASSERT_SAFE_ACTIVE 0
-#endif
+        QCX_ALWAYS_INLINE inline auto get_source_location(QCX_ASSERT_INTERNAL_SOURCE_LOCATION loc)
+        {
+            return qcx::assert::source_location(loc);
+        }
 
-#ifdef QCX_ASSERT_LEVEL_SAFE
-#define QCX_ASSERT_FAST_ACTIVE 1
-#define QCX_ASSERT_ACTIVE 1
-#define QCX_ASSERT_SAFE_ACTIVE 1
-#endif
+        QCX_ALWAYS_INLINE inline auto get_assert_info(
+            std::string_view assertion_content, std::string_view message, qcx::assert::source_location loc)
+        {
+            return qcx::assert::assert_info{
+                .assertion_contents = assertion_content,
+                .message = message,
+                .source_info = loc,
+            };
+        }
+    }
+}
 
-#define QCX_DETAIL_ASSERT_STR2(...) #__VA_ARGS__
-#define QCX_DETAIL_ASSERT_STR(...) QCX_DETAIL_ASSERT_STR2(__VA_ARGS__)
+#endif // QCX_ASSERT_CONFIG_HPP

@@ -1,5 +1,9 @@
-AllowShortIfStatementsOnASingleLine: true
 BasedOnStyle:                        WebKit
+AllowShortFunctionsOnASingleLine:    true
+AllowShortIfStatementsOnASingleLine: true
 Cpp11BracedListStyle:                true
 NamespaceIndentation:                All
 Standard:                            Cpp11
+IndentPPDirectives:                  AfterHash
+SpaceBeforeCpp11BracedList:          false
+ColumnLimit:                         120

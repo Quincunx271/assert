@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        toolchain: [gcc-10.tc.json5]
+
+    steps:
+    - name: Install Dependencies
+      run: |
+        mkdir -p ${{ runner.workspace }}/bin && cd ${{ runner.workspace }}/bin
+        wget https://github.com/vector-of-bool/dds/releases/download/0.1.0-alpha.6/dds-linux-x64
+        chmod +x dds-linux-x64
+        ln -s $PWD/dds-linux-x64 dds
+
+    - name: Print Configuration
+      run: |
+        echo ${{ matrix.toolchain }}
+        ${{ runner.workspace }}/bin/dds --help
+
+    - uses: actions/checkout@v2
+      with:
+        path: src
+
+    - name: Build
+      run: |
+        cd src
+        sed -Ei "s/(warning_flags:.*)'/\1 -Werror'/g" tools/${{ matrix.toolchain }}
+        ${{ runner.workspace }}/bin/dds build -t tools/${{ matrix.toolchain }}
+
+  build-windows:
+    runs-on: windows-latest
+    # MSVC doesn't support std::source_location yet
+    continue-on-error: true
+
+    strategy:
+      matrix:
+        toolchain: [msvc.tc.json5]
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        path: src
+
+    - name: Install Dependencies
+      run: |
+        mkdir ${{ runner.workspace }}/bin
+        cd ${{ runner.workspace }}/bin
+        Invoke-WebRequest -Uri https://github.com/vector-of-bool/dds/releases/download/0.1.0-alpha.6/dds-win-x64.exe -OutFile dds-win-x64.exe
+
+    - name: Print Configuration
+      run: |
+        echo ${{ matrix.toolchain }}
+        ${{ runner.workspace }}/bin/dds-win-x64.exe --help
+
+    - name: Set up Visual Studio shell
+      uses: egor-tensin/vs-shell@v2
+
+    - name: Build
+      run: |
+        ${{ runner.workspace }}/bin/dds-win-x64.exe build -t src/tools/${{ matrix.toolchain }} -p src

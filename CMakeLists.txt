@@ -1,10 +1,6 @@
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.12)
 
-project(qcx_assert VERSION 0.1.2 LANGUAGES CXX)
-
-option(QCX_ASSERT_TREAT_WARNINGS_AS_ERRORS "compiles with -Werror")
-
-include(CTest)
+project(qcx_assert VERSION 0.2.0 LANGUAGES CXX)
 
 ##########
 # qcx_assert
@@ -15,13 +11,12 @@ add_library(Qcx::Assert ALIAS qcx_assert)
 target_include_directories(qcx_assert
   INTERFACE
     $<INSTALL_INTERFACE:include>
-    $<INSTALL_INTERFACE:include/qcx>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
 )
 
 target_compile_features(qcx_assert
   INTERFACE
-    cxx_std_17
+    cxx_std_20
 )
 
 include(GNUInstallDirs)
@@ -52,6 +47,7 @@ write_basic_package_version_file(
   ${CMAKE_CURRENT_BINARY_DIR}/QcxAssertConfigVersion.cmake
   VERSION ${PROJECT_VERSION}
   COMPATIBILITY SameMajorVersion
+  ARCH_INDEPENDENT
 )
 
 install(FILES
@@ -59,5 +55,3 @@ install(FILES
   DESTINATION
     ${QCX_ASSERT_CMAKE_INSTALL_DIR}
 )
-
-add_subdirectory(test)

@@ -1,0 +1,7 @@
+{
+    compiler_id: 'msvc',
+    cxx_version: 'c++20',
+
+    warning_flags: '/WX',
+    debug: 'split',
+}

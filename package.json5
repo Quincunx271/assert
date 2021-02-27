@@ -1,0 +1,6 @@
+{
+    name: 'assert',
+    version: '0.2.0',
+    namespace: 'Quincunx271',
+    test_driver: 'Catch-Main',
+}

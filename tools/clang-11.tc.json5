@@ -1,0 +1,12 @@
+{
+    compiler_id: 'clang',
+    c_compiler: 'clang-11',
+    cxx_compiler: 'clang++-11',
+    cxx_version: 'c++20',
+
+    flags: '-fsanitize=address -fPIC',
+    link_flags: '-fsanitize=address',
+
+    warning_flags: '',
+    debug: 'split',
+}
